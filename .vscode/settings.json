@@ -1,0 +1,13 @@
+{
+    "cmake.debugConfig": {
+        "args": [
+        ],
+        "cwd": "${workspaceFolder}"
+    },
+    "gcovViewer.highlightMissedLines": true,
+    "files.associations": {
+        "iostream": "cpp",
+        "iomanip": "cpp"
+    },
+    // "C_Cpp.loggingLevel": "Debug"
+}

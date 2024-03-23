@@ -1,0 +1,5 @@
+"Harry Potter and the Philosopher's Stone"	1997	"J. K. Rowling"	120	223
+"Le Petit Prince"	1943	"Antoine de Saint-Exupéry"	100	93
+"The Hobbit"	1937	"J. R. R. Tolkien"	100	310
+"The Lion, the Witch and the Wardrobe"	1950	"C. S. Lewis"	85	208
+"Le avventure di Pinocchio"	1881	"Carlo Collodi"	80	100
