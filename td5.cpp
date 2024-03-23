@@ -13,6 +13,8 @@
 #include <limits>
 #include <algorithm>
 #include <sstream>
+#include <list>
+#include <forward_list>
 #include "cppitertools/range.hpp"
 #include "cppitertools/enumerate.hpp"
 #include "gsl/span"
@@ -225,16 +227,13 @@ ostream& operator<< (ostream& os, const Affichable& affichable)
 
 void Item::afficherSur(ostream& os) const
 {
-	os << "Titre: " << titre << "  Année:" << anneeSortie << endl;
+	os << "Titre: " << titre;
 }
 
 void Film::afficherSpecifiqueSur(ostream& os) const
 {
 	os << "  Réalisateur: " << realisateur << endl;
-	os << "  Recette: " << recette << "M$" << endl;
-	os << "Acteurs:" << endl;
-	for (auto&& acteur : acteurs.enSpan())
-		os << *acteur;
+	
 }
 
 void Film::afficherSur(ostream& os) const
@@ -246,7 +245,6 @@ void Film::afficherSur(ostream& os) const
 void Livre::afficherSpecifiqueSur(ostream& os) const
 {
 	os << "  Auteur: " << auteur << endl;
-	os << "  Vendus: " << copiesVendues << "M  Pages: " << nPages << endl;
 }
 
 void Livre::afficherSur(ostream& os) const
@@ -281,7 +279,10 @@ Livre::Livre(istream& is) {
 	lireDe(is);
 }
 
-void afficherListeItems(span<unique_ptr<Item>> listeItems)
+
+//Point 0 
+template <typename Container>
+void afficherListeItems( const Container& listeItems)
 {
 	static const string ligneDeSeparation = "\033[32m────────────────────────────────────────\033[0m\n";
 	cout << ligneDeSeparation;
@@ -289,6 +290,8 @@ void afficherListeItems(span<unique_ptr<Item>> listeItems)
 		cout << *item << ligneDeSeparation;
 	}
 }
+
+
 
 #pragma region "Exemples de tests unitaires"//{
 #ifdef TEST
