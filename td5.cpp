@@ -280,7 +280,7 @@ Livre::Livre(istream& is) {
 }
 
 
-//Point 0 
+//Point 0 (TD5)
 template <typename Container>
 void afficherListeItems( const Container& listeItems)
 {
@@ -368,5 +368,58 @@ int main(int argc, char* argv[])
 	items.push_back(make_unique<FilmLivre>(dynamic_cast<Film&>(*items[4]), dynamic_cast<Livre&>(*items[9])));  // On ne demandait pas de faire une recherche; serait direct avec la matière du TD5.
 
 	// 3.
+	cout << "Affichage TD4: " << endl;
 	afficherListeItems(items);
+
+	//1.1 (TD5)
+	cout << "Probleme 1.1: " << endl;
+	forward_list<unique_ptr<Item>> itemsForwardList;
+	auto it = itemsForwardList.before_begin(); // Initial insertion point
+	for (auto&& item : items) {
+		it = itemsForwardList.emplace_after(it, move(item));
+	}
+	afficherListeItems(itemsForwardList);
+
+	//1.2 (TD5)
+	cout << "Probleme 1.2: " << endl;
+	forward_list<unique_ptr<Item>> itemsSensInverse;
+	auto beginOld = itemsForwardList.begin();
+	auto endOld = itemsForwardList.end();
+	for (; beginOld != endOld; beginOld++)
+		itemsSensInverse.push_front(move(*beginOld));
+	afficherListeItems(itemsSensInverse);
+
+	//1.3 (TD5)
+	cout << "Probleme 1.3: " << endl;
+	forward_list<unique_ptr<Item>> troisiemeForwardList;
+	auto beginOldInverse = itemsSensInverse.begin();
+	auto endOldInverse = itemsSensInverse.end();
+	for (; beginOldInverse != endOldInverse; beginOldInverse++)
+		troisiemeForwardList.push_front(move(*beginOldInverse));
+	afficherListeItems(troisiemeForwardList);
+
+	//1.4 (TD5)
+	cout << "Probleme 1.4: " << endl;
+	vector<unique_ptr<Item>> nouveauVecteur;
+	auto beginOldTroisieme = troisiemeForwardList.begin();
+	auto endOldTroisieme = troisiemeForwardList.end();
+	for (; beginOldTroisieme != endOldTroisieme; beginOldTroisieme++)
+		nouveauVecteur.insert(nouveauVecteur.begin(), move(*beginOldTroisieme));
+	afficherListeItems(nouveauVecteur);
+
+	//1.5 (TD5)
+	cout << "Probleme 1.5: " << endl;
+	unique_ptr<Item> monItem;
+	forward_list<unique_ptr<Item>> Liste;
+	for (auto&& item: nouveauVecteur)
+		Liste.push_front(move(item));
+	auto beginOldListe = Liste.begin();
+	auto endOldListe = Liste.end();
+	for (; beginOldListe != endOldListe; beginOldListe++) {
+		if (beginOldListe->get()->titre == "Alien") {
+			monItem = move(*beginOldListe);
+		}
+	}
+
 }
+	

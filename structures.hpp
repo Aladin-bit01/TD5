@@ -92,7 +92,6 @@ public:
 
 	friend Film* lireFilm(istream& fichier, ListeFilms& listeFilms);
 
-private:
 	string titre;
 	int anneeSortie = 0;
 };
@@ -107,7 +106,6 @@ public:
 	friend shared_ptr<Acteur> ListeFilms::trouverActeur(const string& nomActeur) const;
 	template <typename T> struct accessible_pour_tests_par;  // Non demandé, ni matière au cours, permet d'ajouter des accès pour les tests.
 
-private:
 	string realisateur; // (on suppose qu'il n'y a qu'un réalisateur).
 	int recette = 0; // Recette globale du film en millions de dollars
 	ListeActeurs acteurs;
@@ -122,7 +120,6 @@ public:
 	void afficherSpecifiqueSur(ostream& os) const;
 	void lireDe(istream& is);
 
-private:
 	string auteur;
 	int copiesVendues = 0, nPages = 0;
 };
