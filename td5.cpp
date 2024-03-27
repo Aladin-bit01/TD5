@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <sstream>
 #include <list>
+#include <map>
 #include <forward_list>
 #include "cppitertools/range.hpp"
 #include "cppitertools/enumerate.hpp"
@@ -398,28 +399,34 @@ int main(int argc, char* argv[])
 		troisiemeForwardList.push_front(move(*beginOldInverse));
 	afficherListeItems(troisiemeForwardList);
 
-	//1.4 (TD5)
+	//1.4 (TD5) -- Ajouter Ordre de complexité 
 	cout << "Probleme 1.4: " << endl;
-	vector<unique_ptr<Item>> nouveauVecteur;
+	vector<unique_ptr<Item>> nouveauVecteur; 
 	auto beginOldTroisieme = troisiemeForwardList.begin();
 	auto endOldTroisieme = troisiemeForwardList.end();
 	for (; beginOldTroisieme != endOldTroisieme; beginOldTroisieme++)
 		nouveauVecteur.insert(nouveauVecteur.begin(), move(*beginOldTroisieme));
 	afficherListeItems(nouveauVecteur);
 
-	//1.5 (TD5)
+	//1.5 (TD5) -- A completer 
 	cout << "Probleme 1.5: " << endl;
-	unique_ptr<Item> monItem;
-	forward_list<unique_ptr<Item>> Liste;
-	for (auto&& item: nouveauVecteur)
-		Liste.push_front(move(item));
-	auto beginOldListe = Liste.begin();
-	auto endOldListe = Liste.end();
-	for (; beginOldListe != endOldListe; beginOldListe++) {
-		if (beginOldListe->get()->titre == "Alien") {
-			monItem = move(*beginOldListe);
-		}
+	Film* film;
+	film = dynamic_cast<Film*>(nouveauVecteur[13].get());
+	cout << "Le nom des acteurs de " << film->titre << " est: " << endl; 
+	for (auto&& acteur: film->acteurs.enSpan()){ //pas supposé utiliser span
+		cout << acteur.get()->nom << endl;
 	}
 
+	//2.1 (TD5)
+	cout << "Probleme 2.1: " << endl; 
+	map<string, unique_ptr<Item>> maMap;
+	for (auto&& item : nouveauVecteur) {
+		maMap[item.get()->titre] = move(item);
+	}
+	for (auto&& item : maMap) {
+		cout << item.first << " " << item.second.get()->anneeSortie << endl;
+	}
 }
 	
+	
+		
