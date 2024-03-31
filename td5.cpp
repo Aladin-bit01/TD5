@@ -365,6 +365,12 @@ int main(int argc, char* argv[])
 		}
 	}
 
+	// Pour problème 2.2 (TD5)
+	unordered_map<string, Item*> indexParTitre;
+	for (auto& item : items) {
+		indexParTitre[item->titre] = item.get();
+	}
+
 	// 4.
 	items.push_back(make_unique<FilmLivre>(dynamic_cast<Film&>(*items[4]), dynamic_cast<Livre&>(*items[9])));  // On ne demandait pas de faire une recherche; serait direct avec la matière du TD5.
 
@@ -412,13 +418,14 @@ int main(int argc, char* argv[])
 	cout << "Probleme 1.5: " << endl;
 	Film* film;
 	film = dynamic_cast<Film*>(nouveauVecteur[13].get());
-	cout << "Le nom des acteurs de " << film->titre << " est: " << endl; 
-	for (auto&& acteur: film->acteurs.enSpan()){ //pas supposé utiliser span
+	cout << "Le nom des acteurs de " << film->titre << " est: " << endl;
+	for (auto&& acteur : film->acteurs.enSpan()) { //pas supposé utiliser span
 		cout << acteur.get()->nom << endl;
 	}
+	cout << ligneDeSeparation;
 
 	//2.1 (TD5)
-	cout << "Probleme 2.1: " << endl; 
+	cout << "Probleme 2.1: " << endl;
 	map<string, unique_ptr<Item>> maMap;
 	for (auto&& item : nouveauVecteur) {
 		maMap[item.get()->titre] = move(item);
@@ -426,6 +433,29 @@ int main(int argc, char* argv[])
 	for (auto&& item : maMap) {
 		cout << item.first << " " << item.second.get()->anneeSortie << endl;
 	}
+	cout << ligneDeSeparation;
+
+	//2.2 (TD5)
+	cout << "Probleme 2.2: " << endl;
+	auto itMap = indexParTitre.find("The Hobbit");
+	if (itMap != indexParTitre.end()) {
+		cout << "Trouvé: " << endl;
+		itMap->second->afficherSur(cout);
+	}
+	else {
+		cout << "L'item 'The Hobbit' n'a pas été trouvé." << endl;
+	}
+	cout << ligneDeSeparation;
+
+	//3.1 (TD5)
+	cout << "Probleme 3.1: " << endl;
+
+	cout << ligneDeSeparation;
+
+	//3.2 (TD5)
+	cout << "Probleme 3.2: " << endl;
+
+	cout << ligneDeSeparation;
 }
 	
 	
