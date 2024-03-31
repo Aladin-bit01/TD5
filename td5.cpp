@@ -449,7 +449,16 @@ int main(int argc, char* argv[])
 
 	//3.1 (TD5)
 	cout << "Probleme 3.1: " << endl;
-
+	vector<Film*> films;
+	copy_if(itemsForwardList.begin(), itemsForwardList.end(),
+				back_inserter(films),
+				[](const unique_ptr<Item>& item) -> bool {
+					return dynamic_cast<Film*>(item.get()) != nullptr;
+				});
+	for (Film* film : films) {
+		if(film != nullptr)
+			cout << film->titre << ", " << film->realisateur << endl;
+	}
 	cout << ligneDeSeparation;
 
 	//3.2 (TD5)
