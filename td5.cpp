@@ -447,17 +447,20 @@ int main(int argc, char* argv[])
 	}
 	cout << ligneDeSeparation;
 
-	//3.1 (TD5)
+	// 3.1 (TD5)
 	cout << "Probleme 3.1: " << endl;
-	vector<Film*> films;
-	copy_if(itemsForwardList.begin(), itemsForwardList.end(),
-				back_inserter(films),
-				[](const unique_ptr<Item>& item) -> bool {
-					return dynamic_cast<Film*>(item.get()) != nullptr;
-				});
-	for (Film* film : films) {
-		if(film != nullptr)
+	vector<unique_ptr<Item>> itemsFilms; // Vector pour stocker uniquement les films.
+	copy_if(make_move_iterator(itemsForwardList.begin()), make_move_iterator(itemsForwardList.end()), back_inserter(itemsFilms),
+		[](unique_ptr<Item>&& item) -> bool {
+			return dynamic_cast<Film*>(item.get()) != nullptr;
+		});
+
+	// Afficher les films copiés
+	for (auto& item : itemsFilms) {
+		Film* film = dynamic_cast<Film*>(item.get());
+		if (film) { // Vérifier si l'élément est un film
 			cout << film->titre << ", " << film->realisateur << endl;
+		}
 	}
 	cout << ligneDeSeparation;
 
