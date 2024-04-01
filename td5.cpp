@@ -1,6 +1,16 @@
-﻿
-// Solutionnaire du TD4 INF1015 hiver 2024
-// Par Francois-R.Boyer@PolyMtl.ca
+﻿//﻿
+// Travail dirigé No. 5 pour le cours INF1015 - Programmation orientée objet avancée.
+// Ce TD évolue à partir du TD4 en approfondissant les concepts d'héritage, de polymorphisme,
+// et en introduisant des techniques avancées de gestion des collections hétérogènes avec l'usage des
+// pointeurs intelligents et l'implémentation de concepts C++ modernes comme les algorithmes de la bibliothèque standard
+// et l'usage des expressions lambda. L'objectif est d'améliorer la flexibilité et la maintenabilité du code
+// de la bibliothèque médiatique.
+// \file   td5.cpp
+// \author Alaa Edin Addas et Harry Heng
+// \date   17 avril 2024
+// Créé le 10 avril 2024
+//
+
 
 #pragma region "Includes"//{
 #define _CRT_SECURE_NO_WARNINGS // On permet d'utiliser les fonctions de copies de chaînes qui sont considérées non sécuritaires.
@@ -381,64 +391,63 @@ int main(int argc, char* argv[])
 	cout << "Affichage TD4: " << endl;
 	afficherListeItems(items);
 
-	//1.1 (TD5)
+	// 1.1 (TD5)
 	cout << "Probleme 1.1: " << endl;
-	forward_list<unique_ptr<Item>> itemsForwardList;
-	auto it = itemsForwardList.before_begin(); // Initial insertion point
-	for (auto&& item : items) {
-		it = itemsForwardList.emplace_after(it, move(item));
+	forward_list<Item*> itemsForwardList;
+	for (auto& item : items) {
+		itemsForwardList.push_front(item.release());
 	}
 	afficherListeItems(itemsForwardList);
 
-	//1.2 (TD5)
+
+	// 1.2 (TD5)
 	cout << "Probleme 1.2: " << endl;
-	forward_list<unique_ptr<Item>> itemsSensInverse;
-	auto beginOld = itemsForwardList.begin();
-	auto endOld = itemsForwardList.end();
-	for (; beginOld != endOld; beginOld++)
-		itemsSensInverse.push_front(move(*beginOld));
+	forward_list<Item*> itemsSensInverse;
+	for (auto it = itemsForwardList.begin(); it != itemsForwardList.end(); ++it) {
+		itemsSensInverse.push_front(*it);
+	}
 	afficherListeItems(itemsSensInverse);
 
-	//1.3 (TD5)
+
+	// 1.3 (TD5)
 	cout << "Probleme 1.3: " << endl;
-	forward_list<unique_ptr<Item>> troisiemeForwardList;
-	auto beginOldInverse = itemsSensInverse.begin();
-	auto endOldInverse = itemsSensInverse.end();
-	for (; beginOldInverse != endOldInverse; beginOldInverse++)
-		troisiemeForwardList.push_front(move(*beginOldInverse));
+	forward_list<Item*> troisiemeForwardList;
+	for (auto it = itemsSensInverse.begin(); it != itemsSensInverse.end(); ++it) {
+		troisiemeForwardList.push_front(*it);
+	}
 	afficherListeItems(troisiemeForwardList);
 
-	//1.4 (TD5)
-	cout << "Probleme 1.4: " << endl;
-	vector<unique_ptr<Item>> nouveauVecteur; 
-	auto beginOldTroisieme = troisiemeForwardList.begin();
-	auto endOldTroisieme = troisiemeForwardList.end();
-	for (; beginOldTroisieme != endOldTroisieme; beginOldTroisieme++)
-		nouveauVecteur.insert(nouveauVecteur.begin(), move(*beginOldTroisieme));
-	afficherListeItems(nouveauVecteur); // Ordre de complexité : O(n^2) due aux insertions répétées au début du vecteur.
 
-	//1.5 (TD5) -- A completer 
+	// 1.4 (TD5)
+	cout << "Probleme 1.4: " << endl;
+	vector<Item*> nouveauVecteur;
+	for (auto it = troisiemeForwardList.begin(); it != troisiemeForwardList.end(); ++it) {
+		nouveauVecteur.insert(nouveauVecteur.begin(), *it);
+	}
+	afficherListeItems(nouveauVecteur);
+
+
+	// 1.5 (TD5)
 	cout << "Probleme 1.5: " << endl;
-	Film* film;
-	film = dynamic_cast<Film*>(nouveauVecteur[13].get());
+	Film* film = dynamic_cast<Film*>(nouveauVecteur[13]);
 	cout << "Le nom des acteurs de " << film->titre << " est: " << endl;
-	for (auto&& acteur : film->acteurs.enSpan()) { //pas supposé utiliser span
-		cout << acteur.get()->nom << endl;
+	for (auto&& acteur : film->acteurs.enSpan()) {
+		cout << acteur->nom << endl;
 	}
 	cout << ligneDeSeparation;
 
-	//2.1 (TD5)
+	// 2.1 (TD5) 
 	cout << "Probleme 2.1: " << endl;
-	map<string, unique_ptr<Item>> maMap;
-	for (auto&& item : nouveauVecteur) {
-		maMap[item.get()->titre] = move(item);
+	map<string, Item*> maMap;
+	for (auto item : nouveauVecteur) { 
+		maMap[item->titre] = item;
 	}
 	for (auto&& item : maMap) {
-		cout << item.first << " " << item.second.get()->anneeSortie << endl;
+		cout << item.first << " " << item.second->anneeSortie << endl;
 	}
 	cout << ligneDeSeparation;
 
-	//2.2 (TD5)
+	// 2.2 (TD5)
 	cout << "Probleme 2.2: " << endl;
 	auto itMap = indexParTitre.find("The Hobbit");
 	if (itMap != indexParTitre.end()) {
@@ -450,20 +459,24 @@ int main(int argc, char* argv[])
 	}
 	cout << ligneDeSeparation;
 
-	//3.1 (TD5)
-	cout << "Probleme 3.1: " << endl;
-	vector<unique_ptr<Item>> itemsFilms;
-	copy_if(make_move_iterator(itemsForwardList.begin()), make_move_iterator(itemsForwardList.end()), back_inserter(itemsFilms),
-		[](const unique_ptr<Item>& item) { return dynamic_cast<Film*>(item.get()) != nullptr; });
 
+	// 3.1 (TD5)
+	cout << "Probleme 3.1: " << endl;
+	vector<Item*> itemsFilms;
+	copy_if(itemsForwardList.begin(), itemsForwardList.end(), back_inserter(itemsFilms),
+		[](Item* item) { return dynamic_cast<Film*>(item) != nullptr; });
 	afficherListeItems(itemsFilms);
 	cout << ligneDeSeparation;
 
-	//3.2 (TD5)
+	// 3.2 (TD5)
 	cout << "Probleme 3.2: " << endl;
-	int sommeRecettes = accumulate(itemsFilms.begin(), itemsFilms.end(), 0, [](int somme, const unique_ptr<Item>& item) { return somme + (dynamic_cast<Film*>(item.get()) ? dynamic_cast<Film*>(item.get())->recette : 0); });
+	int sommeRecettes = accumulate(itemsFilms.begin(), itemsFilms.end(), 0,
+		[](int somme, Item* item) {
+			Film* film = dynamic_cast<Film*>(item);
+			return somme + (film ? film->recette : 0);
+		});
 
 	cout << "Somme des recettes des films : " << sommeRecettes << "M$" << endl;
-
 	cout << ligneDeSeparation;
+
 }

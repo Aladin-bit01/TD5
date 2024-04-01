@@ -1,5 +1,13 @@
-// Solutionnaire du TD4 INF1015 hiver 2024
-// Par Francois-R.Boyer@PolyMtl.ca
+//
+// Déclaration des classes et des interfaces pour la gestion avancée d'une bibliothèque médiatique
+// dans le cadre du TD5 d'INF1015. Ce fichier étend les classes Item, Film, Livre, et FilmLivre
+// introduites dans le TD4 et incorpore des fonctionnalités avancées comme la surcharge d'opérateurs,
+// la gestion des ressources via les destructeurs et les méthodes virtuelles pour une expérience polymorphique améliorée.
+// \file   structures_td5.hpp
+// \author Alaa Edin Addas et Harry Heng
+// \date   17 avril 2024
+// Créé le 10 avril 2024
+//
 
 #pragma once
 // Structures mémoires pour une collection de films.
