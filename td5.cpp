@@ -408,14 +408,14 @@ int main(int argc, char* argv[])
 		troisiemeForwardList.push_front(move(*beginOldInverse));
 	afficherListeItems(troisiemeForwardList);
 
-	//1.4 (TD5) -- Ajouter Ordre de complexité 
+	//1.4 (TD5)
 	cout << "Probleme 1.4: " << endl;
 	vector<unique_ptr<Item>> nouveauVecteur; 
 	auto beginOldTroisieme = troisiemeForwardList.begin();
 	auto endOldTroisieme = troisiemeForwardList.end();
 	for (; beginOldTroisieme != endOldTroisieme; beginOldTroisieme++)
 		nouveauVecteur.insert(nouveauVecteur.begin(), move(*beginOldTroisieme));
-	afficherListeItems(nouveauVecteur);
+	afficherListeItems(nouveauVecteur); // Ordre de complexité : O(n^2) due aux insertions répétées au début du vecteur.
 
 	//1.5 (TD5) -- A completer 
 	cout << "Probleme 1.5: " << endl;
@@ -461,16 +461,9 @@ int main(int argc, char* argv[])
 
 	//3.2 (TD5)
 	cout << "Probleme 3.2: " << endl;
-	int sommeRecettes = accumulate(itemsFilms.begin(), itemsFilms.end(), 0,
-		[](int somme, const unique_ptr<Item>& item) {
-			Film* film = dynamic_cast<Film*>(item.get());
-			return somme + (film ? film->recette : 0);
-		});
+	int sommeRecettes = accumulate(itemsFilms.begin(), itemsFilms.end(), 0, [](int somme, const unique_ptr<Item>& item) { return somme + (dynamic_cast<Film*>(item.get()) ? dynamic_cast<Film*>(item.get())->recette : 0); });
 
 	cout << "Somme des recettes des films : " << sommeRecettes << "M$" << endl;
 
 	cout << ligneDeSeparation;
 }
-	
-	
-		

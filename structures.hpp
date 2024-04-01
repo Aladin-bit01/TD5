@@ -71,7 +71,14 @@ public:
 	span<shared_ptr<T>> enSpan() const { return span(elements_.get(), nElements_); }
 
 	//TD5 (1.5)
-	//A completer 
+	//A completer
+	using iterator = shared_ptr<T>*;
+	using const_iterator = const shared_ptr<T>*;
+
+	iterator begin() { return elements_.get(); }
+	iterator end() { return elements_.get() + nElements_; }
+	const_iterator begin() const { return elements_.get(); }
+	const_iterator end() const { return elements_.get() + nElements_; }
 
 private:
 	int capacite_ = 0, nElements_ = 0;
