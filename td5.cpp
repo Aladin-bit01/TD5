@@ -1,4 +1,5 @@
-﻿// Solutionnaire du TD4 INF1015 hiver 2024
+﻿
+// Solutionnaire du TD4 INF1015 hiver 2024
 // Par Francois-R.Boyer@PolyMtl.ca
 
 #pragma region "Includes"//{
@@ -15,6 +16,8 @@
 #include <sstream>
 #include <list>
 #include <map>
+#include <memory>
+#include <numeric>
 #include <forward_list>
 #include "cppitertools/range.hpp"
 #include "cppitertools/enumerate.hpp"
@@ -254,7 +257,7 @@ void Livre::afficherSur(ostream& os) const
 	Livre::afficherSpecifiqueSur(os);
 }
 
-void FilmLivre::afficherSur(ostream& os) const
+void FilmLivre::afficherSur(ostream& os) const 
 {
 	Item::afficherSur(os);
 	os << "Combo:" << endl;
@@ -287,7 +290,7 @@ void afficherListeItems( const Container& listeItems)
 {
 	static const string ligneDeSeparation = "\033[32m────────────────────────────────────────\033[0m\n";
 	cout << ligneDeSeparation;
-	for (auto&& item : listeItems) {
+	for (const auto& item : listeItems) {
 		cout << *item << ligneDeSeparation;
 	}
 }
@@ -447,25 +450,24 @@ int main(int argc, char* argv[])
 	}
 	cout << ligneDeSeparation;
 
-	// 3.1 (TD5)
+	//3.1 (TD5)
 	cout << "Probleme 3.1: " << endl;
-	vector<unique_ptr<Item>> itemsFilms; // Vector pour stocker uniquement les films.
+	vector<unique_ptr<Item>> itemsFilms;
 	copy_if(make_move_iterator(itemsForwardList.begin()), make_move_iterator(itemsForwardList.end()), back_inserter(itemsFilms),
-		[](unique_ptr<Item>&& item) -> bool {
-			return dynamic_cast<Film*>(item.get()) != nullptr;
-		});
+		[](const unique_ptr<Item>& item) { return dynamic_cast<Film*>(item.get()) != nullptr; });
 
-	// Afficher les films copiés
-	for (auto& item : itemsFilms) {
-		Film* film = dynamic_cast<Film*>(item.get());
-		if (film) { // Vérifier si l'élément est un film
-			cout << film->titre << ", " << film->realisateur << endl;
-		}
-	}
+	afficherListeItems(itemsFilms);
 	cout << ligneDeSeparation;
 
 	//3.2 (TD5)
 	cout << "Probleme 3.2: " << endl;
+	int sommeRecettes = accumulate(itemsFilms.begin(), itemsFilms.end(), 0,
+		[](int somme, const unique_ptr<Item>& item) {
+			Film* film = dynamic_cast<Film*>(item.get());
+			return somme + (film ? film->recette : 0);
+		});
+
+	cout << "Somme des recettes des films : " << sommeRecettes << "M$" << endl;
 
 	cout << ligneDeSeparation;
 }

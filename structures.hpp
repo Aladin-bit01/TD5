@@ -127,9 +127,9 @@ public:
 
 class FilmLivre : public Film, public Livre {
 public:
-	FilmLivre(const Film& film, const Livre& livre) : Item(film), Film(film), Livre(livre) { }
-
-	void afficherSur(ostream& os) const override;
+	FilmLivre(const Film& film, const Livre& livre)
+		: Item(film), Film(film), Livre(livre) {}
+	void afficherSur(ostream& os) const override; // Déclaration uniquement
 };
 
 struct Acteur
